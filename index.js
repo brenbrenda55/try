@@ -5,6 +5,7 @@ const Intern = require('./lib/Intern')
 const Manager = require('./lib/Manager')
 const Engineer = require('./lib/Engineer')
 const { writeFile, copyFile } = require('./utils/generate-site');
+const generateTemplate = require('./src/template');
 
 const promptUser = () => {
     return inquirer.prompt ([
@@ -90,56 +91,19 @@ const promptUser = () => {
 };
 
 
-const promptProject = portfolioData => {
-    console.log(`
-  =================
-  Add a New Project
-  =================
-  `);
-  
-    // If there's no 'projects' array property, create one
-    if (!portfolioData.projects) {
-      portfolioData.projects = [];
-    }
-    return inquirer
-      .prompt([
-    
-        {
-          type: 'input',
-          name: 'link',
-          message: 'Enter the GitHub link to your project. (Required)',
-          validate: linkInput => {
-            if (linkInput) {
-              return true;
-            } else {
-              console.log('You need to enter a project GitHub link!');
-              return false;
-            }
-          }
-        },
-      ])
-      .then(projectData => {
-        portfolioData.projects.push(projectData);
-        if (projectData.confirmAddProject) {
-          return promptProject(portfolioData);
-        } else {
-          return portfolioData;
-        }
-      });
-  };
+
   
   promptUser()
-    .then(promptProject)
     .then(portfolioData => {
-      return generatePage(portfolioData);
+        console.log(portfolioData)
+      return generateTemplate(portfolioData);
+      
     })
     .then(pageHTML => {
+        console.log(pageHTML)
       return writeFile(pageHTML);
     })
-    .then(writeFileResponse => {
-      console.log(writeFileResponse);
-      return copyFile();
-    })
+    
     .then(copyFileResponse => {
       console.log(copyFileResponse);
     })

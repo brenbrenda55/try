@@ -1,6 +1,7 @@
 function generateTemplate(data) {
-    return `# ${data.title}
-  
+  console.log(data)
+    return ` ${data.name}
+    
   `;
   }
   
